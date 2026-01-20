@@ -1,11 +1,13 @@
 #include <Arduino.h>
-#include "wifi_config.h"
 #include <WiFi.h>
 #include <time.h>
 
 #include <MD_Parola.h>
 #include <MD_MAX72XX.h>
 #include <SPI.h>
+#include "WifiController.h"
+
+WifiController wifi;
 
 #define HARDWARE_TYPE MD_MAX72XX::FC16_HW
 #define MAX_DEVICES 4
@@ -19,30 +21,30 @@ MD_Parola display = MD_Parola(HARDWARE_TYPE, DATA_PIN, CLK_PIN, CS_PIN, MAX_DEVI
 
 #define LED 2
 
-void connectToWiFi() {
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+// void connectToWiFi() {
+//     WiFi.mode(WIFI_STA);
+//     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
-    Serial.print("Connecting...");
-    int retry = 0;
+//     Serial.print("Connecting...");
+//     int retry = 0;
 
-    while (WiFi.status() != WL_CONNECTED) {
-        delay(500);
-        Serial.print(".");
-        retry++;
+//     while (WiFi.status() != WL_CONNECTED) {
+//         delay(500);
+//         Serial.print(".");
+//         retry++;
 
-        if (retry > 40) {          // kb. 20 másodperc
-            Serial.println(" retry");
-            WiFi.disconnect();
-            WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-            retry = 0;
-        }
-    }
+//         if (retry > 40) {          // kb. 20 másodperc
+//             Serial.println(" retry");
+//             WiFi.disconnect();
+//             WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+//             retry = 0;
+//         }
+//     }
 
-    Serial.println("\nWiFi connected");
-    Serial.print("IP add: ");
-    Serial.println(WiFi.localIP());
-}
+//     Serial.println("\nWiFi connected");
+//     Serial.print("IP add: ");
+//     Serial.println(WiFi.localIP());
+// }
 
 struct tm getTime() {
   // Set timezone and NTP server
@@ -121,7 +123,12 @@ void setup() {
   // Set pin mode
   pinMode(LED,OUTPUT);
   Serial.begin(115200);
-  connectToWiFi();
+  if (wifi.connect()) {
+        Serial.println("WiFi connected!");
+        Serial.println(WiFi.localIP());
+    } else {
+        Serial.println("WiFi connection failed");
+    }
   // getTime();
   showTime();
 }
