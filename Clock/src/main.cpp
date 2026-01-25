@@ -7,8 +7,10 @@
 #include "wifi/wifi_controller.h"
 #include "internet/internet_services.cpp"
 #include "clock/clock.cpp"
+#include "deepsleep.cpp"
 
 WifiController* wifi;
+DeepSleep deepSleep;
 
 // #define HARDWARE_TYPE MD_MAX72XX::FC16_HW
 // #define MAX_DEVICES 4
@@ -177,4 +179,6 @@ void loop() {
   digitalWrite(LED,LOW);
   Serial.println("aaa");
   Serial.println(clockObj.toString());
+
+  deepSleep.sleep(0,20);
 }
