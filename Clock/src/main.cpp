@@ -165,7 +165,7 @@ void setup() {
       Serial.println(WiFi.localIP());
 
       clockObj.setTime(net.getTime());
-      Serial.println(clockObj.toString());
+      Serial.println(clockObj.toStringHMS());
 
   } else {
       Serial.println("WiFi connection failed");
@@ -178,7 +178,7 @@ void loop() {
   delay(500);
   digitalWrite(LED,LOW);
   Serial.println("aaa");
-  Serial.println(clockObj.toString());
-
+  Serial.println(clockObj.toStringHMS());
+  Serial.println(clockObj.toStringHM());
   deepSleep.sleep(0,20);
 }

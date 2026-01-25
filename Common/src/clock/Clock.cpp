@@ -17,10 +17,17 @@ public:
         return result;
     }
 
-    String toString() const {
+    String toStringHMS() const {
         struct tm now = getTime();
         char buf[9];  // "HH:MM:SS"
         sprintf(buf, "%02d:%02d:%02d", now.tm_hour, now.tm_min, now.tm_sec);
+        return String(buf);
+    }
+
+    String toStringHM() const {
+        struct tm now = getTime();
+        char buf[6];
+        sprintf(buf, "%02d:%02d", now.tm_hour, now.tm_min);
         return String(buf);
     }
 
