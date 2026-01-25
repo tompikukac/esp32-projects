@@ -1,4 +1,4 @@
-#include "WifiController.h"
+#include "wifi_controller.h"
 
 WifiController::WifiController() {
     WiFi.mode(WIFI_STA);
