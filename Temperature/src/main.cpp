@@ -14,17 +14,17 @@ void setup() {
   pinMode(LED,OUTPUT);
 
   Serial.println("WiFi connecting...");
-  // wifi = new WifiController();
+  wifi = new WifiController();
 
-  // if (wifi->connect()) {
-  //   Serial.println("WiFi connected!");
-  //   Serial.println(WiFi.localIP());
-  //   Serial.println(wifi->getDeviceId());
+  if (wifi->connect()) {
+    Serial.println("WiFi connected!");
+    Serial.println(WiFi.localIP());
+    Serial.println(wifi->getDeviceId());
 
-  // } else {
-  //     Serial.println("WiFi connection failed");
-  //     deepSleep.sleep(0,5);
-  // }
+  } else {
+      Serial.println("WiFi connection failed");
+      deepSleep.sleep(0,5);
+  }
 }
 
 void loop() {
