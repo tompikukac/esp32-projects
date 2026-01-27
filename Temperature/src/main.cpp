@@ -45,4 +45,5 @@ void loop() {
   digitalWrite(LED,HIGH);
   delay(1500);
   digitalWrite(LED,LOW);
+  deepSleep.sleepInSec(config.deepSleepTimeInSec);
 }

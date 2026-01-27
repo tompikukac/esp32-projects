@@ -3,6 +3,7 @@
 class Config {
 public:
     String name;
+    unsigned long deepSleepTimeInSec = 600; 
 
     Config() : name("default-device") {}  // default érték
 
@@ -15,6 +16,10 @@ public:
 
         if (doc.containsKey("name")) {
             name = String(doc["name"].as<const char*>());
+        }
+        
+        if (doc.containsKey("deepSleepTime")) {
+            deepSleepTimeInSec = doc["deepSleepTime"].as<unsigned long>();
         }
         return true;
     }
