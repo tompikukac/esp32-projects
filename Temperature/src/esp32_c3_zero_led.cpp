@@ -32,7 +32,7 @@ private:
 
 public:
     Esp32C3ZeroLed(uint8_t pin = 10, uint8_t brightness = 40) 
-        : _pixel(1, pin, NEO_GRB + NEO_KHZ800), _pin(pin), _brightness(brightness) {}
+        : _pixel(1, pin, NEO_RGB + NEO_KHZ800), _brightness(brightness) {}
 
     void begin() {
         _pixel.begin();

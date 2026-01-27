@@ -19,12 +19,13 @@ ConfigStorage storage;
 
 void setup() {
   Serial.begin(115200);
+  delay(2000);
   Serial.println("TEMPERATURE");
-  delay(1000);
+  
   statusLed.begin();
   statusLed.setBrightness(4);
-
-
+  statusLed.setColor(Colors::Red);  
+delay(2000);
   Serial.println("WiFi connecting...");
   wifi = new WifiController();
 
@@ -44,14 +45,16 @@ void setup() {
       String configJson = net.getConfig(CONFIG_ROOT + wifi->getDeviceId() + ".json");
       Serial.println("Config JSON: " + configJson);
       config.parse(configJson);
+
+      if(config.name != "default-device") {
+          Serial.println("Saving configuration...");
+          storage.saveConfig(config);
+      }
+
     } else {
       Serial.println("Configuration loaded from storage.");
     }
 
-    if(config.name != "default-device") {
-        Serial.println("Saving configuration...");
-        storage.saveConfig(config);
-    }
     storage.end();
 
     Serial.println(config.toString());
@@ -60,16 +63,20 @@ void setup() {
       Serial.println("WiFi connection failed");
       deepSleep.sleep(0,5);
   }
+  statusLed.setColor(Colors::Lime);  
 }
 
 void loop() {
   Serial.println("LOOP...");
   statusLed.setColor(Colors::Olive);
   delay(1500); 
-  statusLed.setColor(Colors::Cyan);
+  statusLed.setColor(Colors::Green);
   delay(1500);
   Serial.println("...LOOP");
 
+  delay(15000);
+  statusLed.off();
+  deepSleep.sleepInSec(10);
   // deepSleep.sleepInSec(config.deepSleepTimeInSec);
 }
 
