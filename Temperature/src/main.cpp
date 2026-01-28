@@ -6,9 +6,13 @@
 #include "config.cpp"
 #include "internet/internet_services.cpp"
 #include "config_storage.cpp"
-#include "BME280Sensor.cpp"
+#include "bme280_sensor.h"
+#include "secret.h"
+#include "influxdb_controller.cpp"
 
 #define CONFIG_ROOT "https://raw.githubusercontent.com/tompikukac/esp32-projects/main/config/devices/"
+
+InfluxController influx("http://192.168.1.111:8086", "szlab", "esp32", "your-influxdb-token");
 
 Esp32C3ZeroLed statusLed(10);
 
@@ -75,6 +79,33 @@ delay(2000);
   statusLed.setColor(Colors::Lime);  
 }
 
+// void sendToInflux(const BME280Data& data) {
+//   if (WiFi.status() != WL_CONNECTED) {
+//     Serial.println("WiFi not connected");
+//     return;
+//   }
+
+//   HTTPClient http;
+//   String url = String(influxHost) + "/api/v2/write?org=" + influxOrg + "&bucket=" + influxBucket + "&precision=s";
+//   http.begin(url);
+//   http.addHeader("Authorization", String("Token ") + influxToken);
+//   http.addHeader("Content-Type", "text/plain");
+
+//   String body = "environment,name=esp32 temperature=" + String(data.temperature, 2) +
+//                 ",humidity=" + String(data.humidity, 2) +
+//                 ",pressure=" + String(data.pressure, 2);
+
+//   int httpResponseCode = http.POST(body);
+
+//   if (httpResponseCode > 0) {
+//     Serial.printf("InfluxDB response code: %d\n", httpResponseCode);
+//   } else {
+//     Serial.printf("Error sending to InfluxDB: %s\n", http.errorToString(httpResponseCode).c_str());
+//   }
+
+//   http.end();
+// }
+
 void loop() {
   Serial.println("LOOP...");
   statusLed.setColor(Colors::Olive);
@@ -86,6 +117,8 @@ void loop() {
   BME280Data data = sensor.read();
   Serial.printf("T: %.2f C, H: %.2f %%, P: %.2f hPa\n",
                 data.temperature, data.humidity, data.pressure);
+ 
+  influx.send(data);
 
 
   delay(15000);
