@@ -3,9 +3,10 @@
 
 #include "wifi/wifi_controller.h"
 #include "deepsleep.cpp"
-#include "config.cpp"
-#include "internet/internet_services.cpp"
-#include "config_storage.cpp"
+#include "config/config_data.h"
+#include "config/config_controller.h"
+// #include "internet/internet_services.cpp"
+// #include "config_storage.cpp"
 #include "bme280_sensor.h"
 #include "secret.h"
 #include "influxdb_controller.cpp"
@@ -17,10 +18,10 @@ InfluxController influx("http://192.168.1.111:8086", "szlab", "esp32", influxTok
 Esp32C3ZeroLed statusLed(10);
 
 WifiController* wifi;
-InternetServices net;
-Config config;
+// InternetServices net;
+ConfigData config;
 DeepSleep deepSleep;
-ConfigStorage storage;
+// ConfigStorage storage;
 BME280Sensor sensor(4, 5);
 
 void setup() {
@@ -44,27 +45,29 @@ void setup() {
     Serial.println(WiFi.localIP());
     Serial.println(wifi->getDeviceId());
 
-    storage.begin();
-    if (!storage.loadConfig(config)) {
-      // Load configuration
-      Serial.println("Reading default configuration...");
-      String defaultJson = net.getConfig(String(CONFIG_ROOT) + "default.json");
-      config.parse(defaultJson);
-      Serial.println("Reading specific configuration...");
-      String configJson = net.getConfig(CONFIG_ROOT + wifi->getDeviceId() + ".json");
-      Serial.println("Config JSON: " + configJson);
-      config.parse(configJson);
+    ConfigController configCtrl(wifi->getDeviceId(), String(CONFIG_ROOT));
+    config = configCtrl.load();
 
-      if(config.name != "default-device") {
-          Serial.println("Saving configuration...");
-          storage.saveConfig(config);
-      }
+    // storage.begin();
+    // if (!storage.loadConfig(config)) {
+    //   // Load configuration
+    //   Serial.println("Reading default configuration...");
+    //   String defaultJson = net.getConfig(String(CONFIG_ROOT) + "default.json");
+    //   config.parse(defaultJson);
+    //   Serial.println("Reading specific configuration...");
+    //   String configJson = net.getConfig(CONFIG_ROOT + wifi->getDeviceId() + ".json");
+    //   Serial.println("Config JSON: " + configJson);
+    //   config.parse(configJson);
 
-    } else {
-      Serial.println("Configuration loaded from storage.");
-    }
+    //   if(config.name != "default-device") {
+    //       Serial.println("Saving configuration...");
+    //       storage.saveConfig(config);
+    //   }
 
-    storage.end();
+    // } else {
+    //   Serial.println("Configuration loaded from storage.");
+    // }
+    // storage.end();
 
     if (!sensor.begin()) {
       Serial.println("BME280 init failed!");
@@ -113,6 +116,6 @@ void loop() {
   delay(100); 
   wifi->disconnect();
   deepSleep.sleepInSec(10);
-  // deepSleep.sleepInSec(config.deepSleepTimeInSec);
+  deepSleep.sleepInSec(config.deepSleepTimeInSec);
   // deepSleep.lightSleepInSec(config.deepSleepTimeInSec);
 }
