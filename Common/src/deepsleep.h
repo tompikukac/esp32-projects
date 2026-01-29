@@ -6,6 +6,7 @@ class DeepSleep {
 public:
     DeepSleep();
     void sleepInSec(uint32_t seconds = 0); 
+    void lightSleepInSec(uint32_t seconds = 0);
     void sleep(uint32_t minutes = 10, uint32_t seconds = 0); 
     // void sleep(uint32_t minutes, uint32_t seconds);
 };
