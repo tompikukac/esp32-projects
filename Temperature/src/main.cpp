@@ -68,7 +68,7 @@ void setup() {
     }
     Serial.println("BME280 ready");
     
-    Serial.println(config.toString());
+    Serial.println("Config: " + config.toString());
 
   } else {
       Serial.println("WiFi connection failed");
