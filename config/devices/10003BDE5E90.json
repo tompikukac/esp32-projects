@@ -1,4 +1,4 @@
 {
   "name": "test-device-1",
-  "deepSleepTimeInSec": 10
+  "deepSleepTimeInSec": 60
 }
