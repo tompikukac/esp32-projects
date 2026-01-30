@@ -38,7 +38,7 @@ bool WifiController::connect() {
 void WifiController::disconnect() {
     WiFi.disconnect(true);
     delay(100);
-    WiFi.mode(WIFI_OFF);   // <-- this is the key
+    WiFi.mode(WIFI_OFF);
     delay(100);
 }
 

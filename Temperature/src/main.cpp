@@ -26,20 +26,21 @@ void goToDeepSleep(const LedColor* color, uint32_t sleepSeconds) {
   } else {
     statusLed.setColor(*color);
   }
-  Serial.flush();
-  delay(100);
   wifi->disconnect();
+  delay(500);
+
   deepSleep.sleepInSec(sleepSeconds);
 }
 #define BOOT_BUTTON_GPIO 0
 
 void setup() {
+  delay(1000);
   statusLed.begin();
   statusLed.setBrightness(4);
   statusLed.setColor(Colors::Blue);  
 
   Serial.begin(115200);
-  delay(2000);
+  delay(1000);
 
   Serial.println("TEMPERATURE");
   esp_sleep_wakeup_cause_t cause = esp_sleep_get_wakeup_cause();
