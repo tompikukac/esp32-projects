@@ -1,0 +1,36 @@
+version: "3.3"
+
+services:
+  influxdb:
+    image: influxdb:2.8
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    volumes:
+      - /volume1/docker/influxdb/data:/var/lib/influxdb2
+    environment:
+      INFLUXDB_ADMIN_USER: admin
+      INFLUXDB_ADMIN_PASSWORD: yourpassword
+      INFLUXDB_BUCKET: esp32
+      INFLUXDB_ORG: szlab
+      INFLUXDB_HTTP_FLUX_ENABLED: "true"
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:10.0.3
+    env_file:
+      - secret.env
+    user: "0"
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - /volume1/git/esp32-projects/Docker/provisioning:/etc/grafana/provisioning
+      - /volume1/docker/grafana:/var/lib/grafana
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: yourgrafanapassword
+      INFLUXDB_TOKEN: ${INFLUXDB_TOKEN}
+        GF_AUTH_ANONYMOUS_ENABLED: "true"
+        GF_AUTH_ANONYMOUS_ORG_ROLE: "Viewer"
+        GF_AUTH_ANONYMOUS_SKIP_LOGIN_PAGE: "true"
+    restart: unless-stopped

@@ -1,0 +1,15 @@
+apiVersion: 1
+
+datasources:
+  - name: InfluxDB
+    type: influxdb
+    access: proxy
+    url: http://192.168.1.111:8086
+    isDefault: true
+    editable: true
+    jsonData:
+      version: "Flux"
+      organization: szlab
+      defaultBucket: esp32
+    secureJsonData:
+      token: ${INFLUXDB_TOKEN}
