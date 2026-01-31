@@ -17,24 +17,17 @@ services:
       DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUXDB_TOKEN}
     restart: unless-stopped
 
-  influxdb-init:
-    image: curlimages/curl:8.5.0
+  # This helper service creates the second bucket
+  setup-bucket:
+    image: influxdb:latest
     depends_on:
       - influxdb
-    environment:
-      INFLUXDB_TOKEN: ${INFLUXDB_TOKEN}
-    entrypoint: >
-      sh -c "
-      until curl -sf http://influxdb:8086/health; do sleep 2; done;
-
-      curl -s -X POST http://influxdb:8086/api/v2/buckets \
-        -H \"Authorization: Token $${INFLUXDB_TOKEN}\" \
-        -H 'Content-Type: application/json' \
-        --data '{
-          \"org\": \"szlab\",
-          \"name\": \"esp32logs\"
-        }';
-      "
+    entrypoint: ["/bin/sh", "-c"]
+    command: 
+      - |
+        sleep 5;
+        influx bucket create -n esp32logs -r 72h -o szlab -t ${INFLUXDB_TOKEN} --host http://influxdb:8086
+    restart: "no"
 
   grafana:
     image: grafana/grafana:10.0.3
