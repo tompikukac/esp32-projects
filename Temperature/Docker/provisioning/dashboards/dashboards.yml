@@ -1,12 +1,12 @@
 apiVersion: 1
 
 providers:
-  - name: 'ESP32 Projects'
+  - name: 'Lakas'
     orgId: 1
-    folder: 'Temperature'   # The UI folder name in Grafana
+    folder: ''
     type: file
     disableDeletion: false
     editable: true
     options:
-      # This path is INTERNAL to the container
+      # This is the path INSIDE the container
       path: /etc/grafana/provisioning/dashboards
