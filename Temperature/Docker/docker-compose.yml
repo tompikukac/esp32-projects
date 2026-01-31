@@ -3,6 +3,8 @@ version: "3.3"
 services:
   influxdb:
     image: influxdb:2.8
+    env_file:
+      - secret.env
     container_name: influxdb
     ports:
       - "8086:8086"
