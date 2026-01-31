@@ -9,10 +9,10 @@ public:
   InfluxController(const char* host, const char* org, const char* bucket, const char* token)
     : _host(host), _org(org), _bucket(bucket), _token(token) {}
 
-  void send(const BME280Data& data, const String& name) {
+  boolean send(const BME280Data& data, const String& name) {
     if (WiFi.status() != WL_CONNECTED) {
       logger.println("WiFi not connected");
-      return;
+      return false;
     }
 
     HTTPClient http;
@@ -26,10 +26,14 @@ public:
     int code = http.POST(payload);
     if (code > 0) {
       logger.printf("InfluxDB response: %d\n", code);
+      http.end();
+      return true;
     } else {
       logger.printf("InfluxDB POST error: %s\n", http.errorToString(code).c_str());
+      http.end();
+      return false;
     }
-    http.end();
+    
   }
 
 private:
