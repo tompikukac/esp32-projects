@@ -11,5 +11,6 @@ class ConfigController {
     String configRoot;
 public:
     ConfigController(const String& deviceId, const String& configRoot);
-    ConfigData& load(bool forceLoad);
+    ConfigData* load();
+    ConfigData& forceLoad();
 };

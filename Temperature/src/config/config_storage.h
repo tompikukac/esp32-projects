@@ -8,6 +8,6 @@ class ConfigStorage {
 public:
     void begin();
     void saveConfig(const ConfigData& cfg);
-    bool loadConfig(ConfigData& cfg);
+    ConfigData* loadConfig();
     void end();
 };

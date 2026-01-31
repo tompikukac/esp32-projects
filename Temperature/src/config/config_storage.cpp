@@ -9,17 +9,20 @@ void ConfigStorage::saveConfig(const ConfigData& cfg) {
     preferences.putULong("sleepInSec", cfg.deepSleepTimeInSec);
 }
 
-bool ConfigStorage::loadConfig(ConfigData& cfg) {
+ConfigData* ConfigStorage::loadConfig() {
     if (!preferences.isKey("name")) {
-        return false; // no saved config
+        return nullptr;
     }
-    String name = preferences.getString("name", cfg.name);
+    String name = preferences.getString("name", "default-device");
     if (name == "default-device") {
-        return false; // default config, treat as no saved config
+        return nullptr;
     }
-    cfg.name = name;
-    cfg.deepSleepTimeInSec = preferences.getULong("sleepInSec", cfg.deepSleepTimeInSec);
-    return true;
+
+    ConfigData* cfg = new ConfigData();
+    cfg->name = name;
+    cfg->deepSleepTimeInSec =  preferences.getULong("sleepInSec", cfg->deepSleepTimeInSec);
+
+    return cfg;
 }
 
 void ConfigStorage::end() {

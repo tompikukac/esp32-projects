@@ -15,7 +15,7 @@
 
 InfluxController influx("http://192.168.1.111:8086", "szlab", "esp32", influxToken);
 
-Esp32C3ZeroLed statusLed(10,4);
+Esp32C3ZeroLed statusLed(10,40);
 
 WifiController* wifi;
 ConfigData config;
@@ -50,7 +50,8 @@ void setup() {
 
   if (forceLoad) {
     statusLed.setColor(Colors::Magenta);  
-    delay(15000);
+    uint32_t delayMs = esp_random() % 5000;
+    delay(12000 + delayMs);
   } else {
     delay(2000);
   }
@@ -61,23 +62,36 @@ void setup() {
   logger.printf("Wakeup cause: %d, forceLoad: %d\n", cause, forceLoad);
   logger.println("WiFi connecting...");
 
+  ConfigController configCtrl(wifi->getDeviceId(), String(CONFIG_ROOT));
+  ConfigData* cfg = configCtrl.load();
+
+  // WIFI
   wifi = new WifiController();
-
-  if (wifi->connect()) {
-    ConfigController configCtrl(wifi->getDeviceId(), String(CONFIG_ROOT));
-    
-    config = configCtrl.load(forceLoad);
-    logger.println("Config: " + config.toString());
-
-    if (!sensor.begin()) {
-      logger.println("BME280 init failed!");
-      goToDeepSleep(&Colors::Yellow, 10);
-    }
-    logger.println("BME280 ready");
-  } else {
+  if (!wifi->connect()) {
       logger.println("WiFi connection failed");
       goToDeepSleep(&Colors::Red, 10);
   }
+
+  if (cfg == nullptr || forceLoad) {
+    config = configCtrl.forceLoad();
+  } else {
+    config = *cfg;
+  }
+  logger.println("Config: " + config.toString());
+  delay(500); 
+
+  // ConfigController configCtrl(wifi->getDeviceId(), String(CONFIG_ROOT));
+  // config = configCtrl.load();
+
+  // SENSOR
+  if (!sensor.begin()) {
+    logger.println("BME280 init failed!");
+    goToDeepSleep(&Colors::Yellow, 10);
+  }
+  logger.println("BME280 ready");
+
+  influx.sendLog("Device started!!!", config.name);
+  
   statusLed.setColor(Colors::Lime);  
 
   logger.println("LOOP...");
@@ -94,15 +108,6 @@ void setup() {
     goToDeepSleep(&Colors::Yellow, 10);
   }
   logger.printf("T: %.2f C, H: %.2f %%, P: %.2f hPa\n", data->temperature, data->humidity, data->pressure);
-
-  // Check WiFi
-  if(!wifi->isConnected()) {
-    logger.println("WiFi not connected, reconnecting...");
-    if (!wifi->connect()) {
-      logger.println("WiFi reconnection failed");
-      goToDeepSleep(&Colors::Red, 10);
-    }
-  }
 
   // Send to InfluxDB
   if(! influx.send(*data, config.name)) {
