@@ -21,8 +21,6 @@
   "id": 1,
   "links": [],
   "liveNow": false,
-  "title": "Lakas Dashboard",
-  "uid": "lakas-01",
   "panels": [
     {
       "datasource": {
@@ -495,7 +493,7 @@
   "timepicker": {},
   "timezone": "",
   "title": "Lakas",
-  "uid": "dd417025-8bba-467c-97ff-e39885e7b60b",
+  "uid": "lakas-01",
   "version": 10,
   "weekStart": ""
 }
