@@ -56,7 +56,7 @@ void setup() {
     delay(2000);
   }
 
-  logger.begin(115200);
+  logger.begin(115200, 5000);
   delay(1000);
   logger.println("TEMPERATURE");
   logger.printf("Wakeup cause: %d, forceLoad: %d\n", cause, forceLoad);
@@ -67,12 +67,14 @@ void setup() {
 
   // WIFI
   wifi = new WifiController();
-  if (!wifi->connect()) {
+  if (!wifi->connect(cfg->ip)) {
+      influx.sendLog("WiFi connection failed", config.name);
       logger.println("WiFi connection failed");
       goToDeepSleep(&Colors::Red, 10);
   }
 
   if (cfg == nullptr || forceLoad) {
+    influx.sendLog("Force loading config", config.name);
     config = configCtrl.forceLoad();
   } else {
     config = *cfg;
@@ -85,12 +87,11 @@ void setup() {
 
   // SENSOR
   if (!sensor.begin()) {
+    influx.sendLog("BME280 init failed!", config.name);
     logger.println("BME280 init failed!");
     goToDeepSleep(&Colors::Yellow, 10);
   }
   logger.println("BME280 ready");
-
-  influx.sendLog("Device started!!!", config.name);
   
   statusLed.setColor(Colors::Lime);  
 
@@ -104,6 +105,7 @@ void setup() {
   BME280Data* data = sensor.read();
   if (data == nullptr) {
     statusLed.setColor(Colors::Blue);
+    influx.sendLog("BME280 read failed", config.name);
     logger.println("BME280 read failed");
     goToDeepSleep(&Colors::Yellow, 10);
   }

@@ -18,6 +18,7 @@ bool WifiController::connect(const IPAddress& ip) {
     WiFi.setSleep(false);        // VERY important for stability
 
     if (ip != IPAddress(0,0,0,0)) {
+        logger.println("WiFi: setting static IP " + ip.toString());
         IPAddress local_IP = ip; // from parameter
         IPAddress gateway(192,168,1,1);  // set your gateway
         IPAddress subnet(255,255,255,0); // set your subnet mask

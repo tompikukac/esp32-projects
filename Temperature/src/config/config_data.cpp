@@ -19,6 +19,7 @@ bool ConfigData::parse(const String& jsonStr) {
     }
 
     if (doc.containsKey("ip")) {
+        Serial.println("Parsing IP: " + String(doc["ip"].as<const char*>()));
         ip.fromString(doc["ip"].as<const char*>());
     }
 
