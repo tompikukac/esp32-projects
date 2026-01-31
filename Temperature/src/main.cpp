@@ -11,7 +11,7 @@
 #include "logger.h"
 #include <esp_task_wdt.h>
 
-#define CONFIG_ROOT "https://raw.githubusercontent.com/tompikukac/esp32-projects/main/config/devices/"
+#define CONFIG_ROOT "https://raw.githubusercontent.com/tompikukac/esp32-projects/main/Temperature/config/devices/"
 
 InfluxController influx("http://192.168.1.111:8086", "szlab", "esp32", influxToken);
 
