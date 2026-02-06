@@ -16,8 +16,9 @@ void OledDisplay::setFont(const uint8_t* font) {
   u8g2.setFont(font);
 }
 
-void OledDisplay::setText(const char* text, int x, int y) {
-  bufferText = text;
+void OledDisplay::setText(const String& text, int x, int y) {
+  tempBuffer = text;      // store String internally
+  bufferText = tempBuffer.c_str();
   bufferX = x;
   bufferY = y;
 }
