@@ -2,6 +2,8 @@
 #include <Arduino.h>
 
 #include "oled/oled_display.h"
+#include "sensor/temperature_sensor.cpp"
+#include "sensor/sensor_factory.cpp"
 
 OledDisplay oled;
 // WifiControllerB* wifi;
@@ -19,6 +21,8 @@ OledDisplay oled;
 
 #define LED_PIN 8
 
+TemperatureSensor* sensor = createSensor(SensorType::SHT30);
+
 
 void setup() {
  Serial.begin(115200);
@@ -35,8 +39,9 @@ void setup() {
 
   pinMode(LED_PIN, OUTPUT);
 
-  // oled.begin();
-  // oled.setFont(u8g2_font_osb26_tf);
+  oled.begin();
+  oled.setFont(u8g2_font_timB18_tn);
+  // oled.setFont(u8g2_font_ncenB08_tr);
 
   delay(50);
   Serial.println("setup...");
@@ -44,18 +49,25 @@ void setup() {
 
 void loop() {
 
-  // u8g2.setFont(u8g2_font_ncenB08_tr);
-  // u8g2.setFont(u8g2_font_spleen32x64_mf);
-
-  // u8g2.drawStr(0, 20, "Hello World");
-  // u8g2.drawStr(0, 10, "Line 1");
-  // u8g2.drawStr(0, 20, "Line 2");
-  // u8g2.drawStr(0, 30, "Line 3");
-  // u8g2.drawStr(0, 40, "Line 4");
-  // u8g2.drawStr(0, 50, "Line 5");
-
-  // oled.setText("33.6", 0, 40);
-  // oled.show();
+   if (sensor && sensor->begin()) {
+    TemperatureData data = sensor->read();
+    String tempStr = String(data.temperature, 2);
+    String humidityStr = String(data.humidity, 2) + "%";
+    Serial.println("TEMP:" + tempStr + " HUM:" + humidityStr);
+    oled.setText(tempStr, 0, 30);
+    oled.show();
+    digitalWrite(LED_PIN, HIGH);
+    delay(5000);
+    oled.setText(humidityStr, 0, 30);
+    oled.show();
+    digitalWrite(LED_PIN, LOW);
+    // oled.setText(humidityStr, 0, 40);
+   } else {
+    Serial.println("Szenzor inicializálása sikertelen!");
+    oled.setText("Sensor error", 0, 30);
+    oled.show();
+   }
+  
 
   // if (!mySensor.beginI2C(Wire)) {
   //   Serial.println("BME280 nem indul");
@@ -73,11 +85,7 @@ void loop() {
     // Serial.print(pressure);
     // Serial.println(" hPa");
 
-    delay(1000);
-    digitalWrite(LED_PIN, HIGH);
-    delay(500);
-    digitalWrite(LED_PIN, LOW);
-    delay(500);
+
 
 
   // // --- Init BME280 ---
@@ -113,7 +121,12 @@ void loop() {
   //               temperature, humidity, pressure);
 
   Serial.println("Looping...");
-  delay(10000);
+  delay(5000);
+
+  digitalWrite(LED_PIN, HIGH);
+  delay(500);
+  digitalWrite(LED_PIN, LOW);
+  delay(500);
   Serial.println("Looping...");
 
 
