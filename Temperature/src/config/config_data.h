@@ -7,6 +7,8 @@ public:
     String name;
     unsigned long deepSleepTimeInSec;
     IPAddress ip;
+    const char* sensorType;
+    bool oled;
 
     ConfigData();
 

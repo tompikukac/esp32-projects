@@ -1,7 +1,8 @@
 #include "config_data.h"
+#include "sensor_type.h"
 
 ConfigData::ConfigData()
-    : name("default-device"), deepSleepTimeInSec(599), ip(0, 0, 0, 0) {}
+    : name("default-device"), deepSleepTimeInSec(599), ip(0, 0, 0, 0), sensorType(SensorType::SHT30), oled(false) {}
 
 bool ConfigData::parse(const String& jsonStr) {
     StaticJsonDocument<200> doc;
@@ -23,11 +24,23 @@ bool ConfigData::parse(const String& jsonStr) {
         ip.fromString(doc["ip"].as<const char*>());
     }
 
+    if (doc.containsKey("sensorType")) {
+        sensorType = doc["sensorType"].as<const char*>();
+    }
+
+    if (doc.containsKey("Oled")) {
+        oled = doc["Oled"].as<bool>();
+    }
+
     return true;
 }
 
 String ConfigData::toString() const {
-    return "name: " + name + ", deepSleepTimeInSec: " + String(deepSleepTimeInSec) + ", ip: " + ip.toString();
+    return "name: " + name + 
+    ", deepSleepTimeInSec: " + String(deepSleepTimeInSec) + 
+    ", ip: " + ip.toString()+ 
+    ", sensorType: " + String(sensorType)+ 
+    ", Oled: " + String(oled ? "true" : "false");
 }
 
 bool ConfigData::hasStaticIP() const {
