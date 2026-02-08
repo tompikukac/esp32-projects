@@ -22,6 +22,7 @@ public:
     http.addHeader("Content-Type", "text/plain");
 
     String payload = buildPayload(data, name);
+    logger.println("Sending to InfluxDB: " + payload);
 
     int code = http.POST(payload);
     if (code > 0) {
@@ -76,11 +77,11 @@ String buildPayload(const TemperatureData& data, const String& name) {
     String payload = "environment,name=" + name;
     bool firstField = true;
 
-if (!isnan(data.temperature)) {
-    payload += (firstField ? " " : ",");
-    payload += "temperature=" + String(data.temperature, 2);
-    firstField = false;
-}
+    if (!isnan(data.temperature)) {
+        payload += (firstField ? " " : ",");
+        payload += "temperature=" + String(data.temperature, 2);
+        firstField = false;
+    }
 
     if (!isnan(data.humidity)) {
         payload += (firstField ? " " : ",");

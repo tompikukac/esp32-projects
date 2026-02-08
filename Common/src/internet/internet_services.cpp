@@ -37,27 +37,30 @@ public:
     }
 
     String* getConfig(const String& url) {
-    static String payload;
-
-    for (int i = 0; i < 5; i++) {
-        HTTPClient http;
-        http.begin(url);
-
-        int httpCode = http.GET();
-        if (httpCode == HTTP_CODE_OK) {
-            payload = http.getString();
-            http.end();
-
-            if (payload.length() > 0) {
-                return &payload;
+        static String payload;
+        logger.println("Fetching config from: " + url);
+        for (int i = 0; i < 5; i++) {
+            HTTPClient http;
+            if (!http.begin(url)) {
+                delay(2000);
+                continue;
             }
-        } else {
-            http.end();
+
+            int httpCode = http.GET();
+            if (httpCode == HTTP_CODE_OK) {
+                payload = http.getString();
+                http.end();
+
+                if (payload.length() > 0) {
+                    return &payload;
+                }
+            } else {
+                http.end();
+            }
+
+            delay(2000);
         }
-
-        delay(2000);
+        return nullptr;
     }
 
-    return nullptr;
-    }
 };

@@ -93,7 +93,7 @@ void setup() {
       influx.sendLog("WiFi connection failed", config.name);
       goToDeepSleep(&Colors::Red, 10);
   }
-
+  delay(2000);  
   if (cfg == nullptr || forceLoad) {
     influx.sendLog("Force loading config", config.name);
     config = configCtrl.forceLoad();
@@ -109,15 +109,18 @@ void setup() {
   delay(50); 
 
   statusLed.setColor(Colors::Lime);
-
-  if (cfg->oled)
+  logger.println("Config loaded");
+  if (config.oled)
   {
     oled.begin();
     oled.setFont(u8g2_font_timB18_tn);
   }
-
-  TemperatureSensor* sensor = createSensor(cfg->sensorType, Wire);
+  logger.println("OLED initialized");
+  TemperatureSensor* sensor = createSensor(config.sensorType, Wire);
   
+// TemperatureSensor* sensor = createSensor(SensorType::SHT40, Wire);
+
+  logger.println("Sensor created");
   // SENSOR
   if (!sensor || !sensor->begin()) {
   // if (!sensor.begin()) {
@@ -130,6 +133,10 @@ void setup() {
  
   // Read sensor
   TemperatureData data = sensor->read();
+
+  String tempStr = String(data.temperature, 2);
+  String humidityStr = String(data.humidity, 0) + "%";
+  logger.println("TEMP:" + tempStr + " HUM:" + humidityStr);
 
   if (!data.isValid()) {
     statusLed.setColor(Colors::Blue);

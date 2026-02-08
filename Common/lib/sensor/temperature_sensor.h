@@ -3,9 +3,9 @@
 #include <cmath>
 
 struct TemperatureData {
-  float temperature;
-  float humidity;
-  float pressure;
+  float temperature = NAN;
+  float humidity = NAN;
+  float pressure = NAN;
   bool isValid() const {
     return !isnan(temperature) || !isnan(humidity) || !isnan(pressure);
   }
