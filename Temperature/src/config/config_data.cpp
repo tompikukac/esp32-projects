@@ -2,7 +2,7 @@
 #include "sensor/sensor_type.h"
 
 ConfigData::ConfigData()
-    : name("default-device"), deepSleepTimeInSec(599), ip(0, 0, 0, 0), sensorType(SensorType::SHT30), oled(false) {}
+    : name("default-device"), deepSleepTimeInSec(599), ip(0, 0, 0, 0), sensorType(SensorType::SHT40), oled(false) {}
 
 bool ConfigData::parse(const String& jsonStr) {
     StaticJsonDocument<200> doc;
