@@ -21,7 +21,8 @@ OledDisplay oled;
 
 #define LED_PIN 8
 
-TemperatureSensor* sensor = createSensor(SensorType::SHT40, Wire);
+// TemperatureSensor* sensor = createSensor(SensorType::SHT40, Wire);
+TemperatureSensor* sensor = createSensor(SensorType::SHT30, Wire);
 // TemperatureSensor* sensor = createSensor(SensorType::SHT40);
 
 
