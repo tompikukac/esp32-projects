@@ -113,7 +113,7 @@ void setup() {
   if (config.oled)
   {
     oled.begin();
-    oled.setFont(u8g2_font_timB18_tn);
+    oled.setFont(u8g2_font_timB24_tf);
   }
   logger.println("OLED initialized");
   TemperatureSensor* sensor = createSensor(config.sensorType, Wire);
