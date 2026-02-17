@@ -1,6 +1,6 @@
 {
   "name": "default-device",
-  "deepSleepTimeInSec": 600,
+  "deepSleepTimeInSec": 300,
   "sensorType": "SHT40",
   "Oled": false
 }
