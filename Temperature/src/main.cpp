@@ -114,8 +114,8 @@ void setup() {
   {
     oled.begin();
     oled.setFont(u8g2_font_timB24_tf);
+    logger.println("OLED initialized");
   }
-  logger.println("OLED initialized");
   TemperatureSensor* sensor = createSensor(config.sensorType, Wire);
   
 // TemperatureSensor* sensor = createSensor(SensorType::SHT40, Wire);
