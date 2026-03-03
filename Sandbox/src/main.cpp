@@ -21,8 +21,8 @@ OledDisplay oled;
 
 #define LED_PIN 8
 
-// TemperatureSensor* sensor = createSensor(SensorType::SHT40, Wire);
-TemperatureSensor* sensor = createSensor(SensorType::SHT30, Wire);
+TemperatureSensor* sensorSHT40 = createSensor(SensorType::SHT40, Wire);
+TemperatureSensor* sensor = createSensor(SensorType::BME680, Wire);
 // TemperatureSensor* sensor = createSensor(SensorType::SHT40);
 
 
@@ -58,11 +58,22 @@ void loop() {
     } else {
       Serial.println("Szenzor sikertelen.");
     }
+
+sensorSHT40->begin();
+
+
+
+TemperatureData dataSHT40 = sensorSHT40->read();
+    String tempStr2 = String(dataSHT40.temperature, 2);
+    String humidityStr2 = String(dataSHT40.humidity, 0) + "%";
+    Serial.println("TEMP2: " + tempStr2 + " HUM2: " + humidityStr2);
     
     TemperatureData data = sensor->read();
     String tempStr = String(data.temperature, 2);
     String humidityStr = String(data.humidity, 0) + "%";
     Serial.println("TEMP:" + tempStr + " HUM:" + humidityStr);
+    Serial.println("############# TEMP1:" + tempStr);
+    Serial.println("############# TEMP2:" + tempStr2);
     oled.setText(tempStr, 0, 30);
     oled.show();
     digitalWrite(LED_PIN, HIGH);
@@ -78,56 +89,10 @@ void loop() {
    }
   
 
-  // if (!mySensor.beginI2C(Wire)) {
-  //   Serial.println("BME280 nem indul");
-  // }
-  //   Serial.println("BME280 inicializálva.");
-  //   float temperature = mySensor.readTempC();
-  //   float humidity = mySensor.readFloatHumidity();
-  //   float pressure = mySensor.readFloatPressure() / 100.0F; // hPa-ba
+  
 
-    // Serial.print("Hőmérséklet: ");
-    // Serial.print(temperature);
-    // Serial.print(" °C, Páratartalom: ");
-    // Serial.print(humidity);
-    // Serial.print(" %, Légnyomás: ");
-    // Serial.print(pressure);
-    // Serial.println(" hPa");
-
-
-
-
-  // // --- Init BME280 ---
-  // if (!bme.begin(0x76)) {
-  //   Serial.println("BME280 not found!");
-  //  // esp_deep_sleep_start();
-  // }
-
-  // --- Force-mode, lowest power ---
-  // bme.setSampling(
-  //   Adafruit_BME280::MODE_FORCED,
-  //   Adafruit_BME280::SAMPLING_X1,   // temperature
-  //   Adafruit_BME280::SAMPLING_X1,   // pressure
-  //   Adafruit_BME280::SAMPLING_X1,   // humidity
-  //   Adafruit_BME280::FILTER_OFF
-  // );
-
-  // --- Let ESP32 settle thermally ---
-  delay(300);   // critical if waking from deep sleep
-
-  // --- Throw away first reading ---
-  // bme.takeForcedMeasurement();
   delay(100);
 
-  // // --- Actual measurement ---
-  // bme.takeForcedMeasurement();
-
-  // float temperature = bme.readTemperature();
-  // float humidity    = bme.readHumidity();
-  // float pressure    = bme.readPressure() / 100.0F;
-
-  // Serial.printf("T=%.2f °C  H=%.2f %%  P=%.2f hPa\n",
-  //               temperature, humidity, pressure);
 
   Serial.println("Looping...");
   delay(5000);
