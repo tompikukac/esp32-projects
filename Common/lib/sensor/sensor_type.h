@@ -3,6 +3,7 @@
 enum class SensorType {
   SHT30,
   SHT40,
+  BME680,
   BME280,
   Unknown
 };
@@ -12,6 +13,7 @@ struct SensorTypeHelper {
         switch(type) {
             case SensorType::SHT30: return "SHT30";
             case SensorType::SHT40: return "SHT40";
+            case SensorType::BME680: return "BME680";
             case SensorType::BME280: return "BME280";
             default: return "Unknown";
         }
@@ -23,6 +25,7 @@ struct SensorTypeHelper {
         }
         if (strcmp(str, "SHT30") == 0) return SensorType::SHT30;
         if (strcmp(str, "SHT40") == 0) return SensorType::SHT40;
+        if (strcmp(str, "BME680") == 0) return SensorType::BME680;
         if (strcmp(str, "BME280") == 0) return SensorType::BME280;
         return SensorType::Unknown;
     }

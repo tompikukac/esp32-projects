@@ -3,6 +3,8 @@
 #include "temperature_sensor.h"
 #include "sht30_sensor.h"
 #include "sht40_sensor.h"
+#include "bme280_sensor.h"
+#include "bme680_sensor.h"
 #include <Wire.h>
 #include "sensor/sensor_type.h"
 

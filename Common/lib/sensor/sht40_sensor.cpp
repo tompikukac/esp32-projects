@@ -21,6 +21,8 @@ TemperatureData SHT40Sensor::readImpl() {
 
   sensors_event_t temp;
   sensors_event_t humidity;
+  // dummy read
+  sht.getEvent(&humidity, &temp);
 
   if (!sht.getEvent(&humidity, &temp)) {
     // measurement failed → return all-NaN
