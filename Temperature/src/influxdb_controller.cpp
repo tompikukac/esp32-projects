@@ -95,6 +95,12 @@ String buildPayload(const TemperatureData& data, const String& name) {
         firstField = false;
     }
 
+    if (!isnan(data.gas_resistance)) {
+        payload += (firstField ? " " : ",");
+        payload += "gas=" + String(data.gas_resistance, 2);
+        firstField = false;
+    }
+
     return payload;
 }
 

@@ -6,8 +6,9 @@ struct TemperatureData {
   float temperature = NAN;
   float humidity = NAN;
   float pressure = NAN;
+  float gas_resistance = NAN;
   bool isValid() const {
-    return !isnan(temperature) || !isnan(humidity) || !isnan(pressure);
+    return !isnan(temperature) || !isnan(humidity) || !isnan(pressure) || !isnan(gas_resistance);
   }
 };
 
