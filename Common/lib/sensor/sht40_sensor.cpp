@@ -6,9 +6,27 @@ SHT40Sensor::SHT40Sensor(TwoWire& wire)
 bool SHT40Sensor::beginImpl() {
   wire.begin(5, 6);  // SDA=GPIO5, SCL=GPIO6
 
-  if (!sht.begin(&wire)) {
-    return false;
+  // safe retry connect
+  int attempts = 0;
+  bool ok = false;
+  do {
+      ok = sht.begin(&wire);
+      if (ok) {
+          break;
+      }
+
+      attempts++;
+      delay(200);  // delay between retries (ms)
+
+  } while (attempts < 5);
+
+  if (!ok) {
+      return false;
   }
+
+  // if (!sht.begin(&wire)) {
+  //   return false;
+  // }
 
   sht.setPrecision(SHT4X_HIGH_PRECISION);
   sht.setHeater(SHT4X_NO_HEATER);
