@@ -30,7 +30,7 @@ struct TemperatureData {
   }
 
   static float safeAdd(float a, float b) {
-    if (isnan(a)) a = 0.0f;
+    if (isnan(a)) return NAN;
     if (isnan(b)) b = 0.0f;
     return a + b;
   }
