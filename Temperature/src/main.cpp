@@ -5,7 +5,6 @@
 #include "deepsleep.cpp"
 #include "config/config_data.h"
 #include "config/config_controller.h"
-#include "bme280_sensor.h"
 #include "secret.h"
 #include "influxdb_controller.cpp"
 #include "logger.h"
