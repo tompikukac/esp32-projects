@@ -51,37 +51,16 @@ TemperatureData BME680Sensor::readImpl() {
   }
 
   if (!isnan(bme.pressure)) {
-    data.pressure = bme.pressure;
+    data.pressure = (bme.readPressure() / pow(1.0 - (100 / 44330.0), 5.255)) / 100.0; // sea level (100m)
   }
 
   // read GAS data
   bme.setGasHeater(320, 150);
   bme.performReading();
-
-
-Serial.print("Temperature: ");
-Serial.print(data.temperature);
-Serial.println(" °C");
-
-Serial.print("Humidity: ");
-Serial.print(data.humidity);
-Serial.println(" %");
-
-Serial.print("Pressure: ");
-Serial.print(data.pressure / 100.0);  // Pa → hPa
-Serial.println(" hPa");
-float seaLevel = bme.readPressure() / pow(1.0 - (100 / 44330.0), 5.255);
-Serial.print(seaLevel / 100.0);
-Serial.println(" hPa");
-
-Serial.print("Gas resistance: ");
-Serial.print(bme.gas_resistance / 1000.0);  // Ohm → kOhm
-Serial.println(" kOhm");
-
-Serial.println();
-
-
-
+  
+  if (!isnan(bme.gas_resistance)) {
+    data.gas_resistance = bme.gas_resistance / 1000.0;
+  }
 
   return data;
 }
