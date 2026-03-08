@@ -22,7 +22,7 @@ OledDisplay oled;
 #define LED_PIN 8
 
 TemperatureSensor* sensorSHT40 = createSensor(SensorType::SHT40, Wire);
-TemperatureSensor* sensor = createSensor(SensorType::BME680, Wire);
+TemperatureSensor* sensor680 = createSensor(SensorType::BME680, Wire);
 // TemperatureSensor* sensor = createSensor(SensorType::SHT40);
 
 
@@ -51,9 +51,9 @@ void setup() {
 
 void loop() {
 
-   if (sensor && sensor->begin()) {
+   if (sensor680 && sensor680->begin()) {
 
-    if(sensor->isStarted()) {
+    if(sensor680->isStarted()) {
       Serial.println("Szenzor sikeres.");
     } else {
       Serial.println("Szenzor sikertelen.");
@@ -63,22 +63,25 @@ sensorSHT40->begin();
 
 
 
-TemperatureData dataSHT40 = sensorSHT40->read();
-    String tempStr2 = String(dataSHT40.temperature, 2);
-    String humidityStr2 = String(dataSHT40.humidity, 0) + "%";
-    Serial.println("TEMP2: " + tempStr2 + " HUM2: " + humidityStr2);
+    TemperatureData dataSHT40 = sensorSHT40->read();  
+    Serial.println(dataSHT40.toString());
     
-    TemperatureData data = sensor->read();
-    String tempStr = String(data.temperature, 2);
-    String humidityStr = String(data.humidity, 0) + "%";
-    Serial.println("TEMP:" + tempStr + " HUM:" + humidityStr);
-    Serial.println("############# TEMP1:" + tempStr);
-    Serial.println("############# TEMP2:" + tempStr2);
-    oled.setText(tempStr, 0, 30);
+    
+    TemperatureData data680 = sensor680->read();
+    Serial.println(data680.toString());
+
+    String tempSHT40 = String(dataSHT40.temperature, 2);
+    String humSHT40 = String(dataSHT40.humidity, 2);
+    String temp680 = String(data680.temperature, 2);
+
+    Serial.println("#############  SHT40:" + tempSHT40);
+    Serial.println("############# BME680:" + temp680);
+
+    oled.setText(tempSHT40, 0, 30);
     oled.show();
     digitalWrite(LED_PIN, HIGH);
     delay(5000);
-    oled.setText(humidityStr+"a", 0, 30);
+    oled.setText(humSHT40+"a", 0, 30);
     oled.show();
     digitalWrite(LED_PIN, LOW);
     // oled.setText(humidityStr, 0, 40);
