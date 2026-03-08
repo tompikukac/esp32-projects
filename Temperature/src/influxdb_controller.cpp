@@ -74,7 +74,9 @@ private:
   const char* _token;
 
 String buildPayload(const TemperatureData& data, const String& name) {
-    String payload = "environment,name=" + name;
+    String safeName = name;
+    safeName.replace(" ", "\\ ");
+    String payload = "environment,name=" + safeName;
     bool firstField = true;
 
     if (!isnan(data.temperature)) {
