@@ -29,9 +29,41 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "continuous-GrYlRd"
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "points",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "log": 2,
+              "type": "log"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
+          "max": 35,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -49,39 +81,36 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
-        "w": 9,
+        "h": 6,
+        "w": 23,
         "x": 0,
         "y": 0
       },
       "id": 7,
       "options": {
-        "displayMode": "lcd",
-        "minVizHeight": 10,
-        "minVizWidth": 0,
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
         },
-        "showUnfilled": true,
-        "valueMode": "color"
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
       },
-      "pluginVersion": "10.0.3",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "P951FEA4DE68E13C5"
           },
-          "query": "from(bucket: \"esp32\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r._measurement == \"environment\" and r._field == \"temperature\")\r\n  |> keep(columns: [\"_time\", \"_value\", \"name\"])\r\n  |> group(columns: [\"name\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
+          "query": "from(bucket: \"esp32\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r._measurement == \"environment\" and r._field == \"temperature\")\r\n  |> keep(columns: [\"_time\", \"_value\", \"name\"])\r\n  |> group(columns: [\"name\"])",
           "refId": "A"
         }
       ],
-      "type": "bargauge"
+      "title": "Panel Title",
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -114,10 +143,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
-        "w": 15,
-        "x": 9,
-        "y": 0
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 6
       },
       "id": 4,
       "options": {
@@ -139,11 +168,73 @@
             "type": "influxdb",
             "uid": "P951FEA4DE68E13C5"
           },
-          "query": "from(bucket: \"esp32\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r._measurement == \"environment\" and r._field == \"temperature\")\r\n  |> keep(columns: [\"_time\", \"_value\", \"name\"])\r\n  |> group(columns: [\"name\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
+          "query": "from(bucket: \"esp32\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r._measurement == \"environment\" and r._field == \"temperature\")\r\n  |> keep(columns: [\"_time\", \"_value\", \"name\"])\r\n  |> group(columns: [\"name\"])",
           "refId": "A"
         }
       ],
       "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P951FEA4DE68E13C5"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "id": 8,
+      "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P951FEA4DE68E13C5"
+          },
+          "query": "from(bucket: \"esp32\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r._measurement == \"environment\" and r._field == \"temperature\")\r\n  |> keep(columns: [\"_time\", \"_value\", \"name\"])\r\n  |> group(columns: [\"name\"])",
+          "refId": "A"
+        }
+      ],
+      "type": "bargauge"
     },
     {
       "datasource": {
@@ -207,7 +298,7 @@
         "h": 12,
         "w": 24,
         "x": 0,
-        "y": 11
+        "y": 22
       },
       "id": 1,
       "options": {
@@ -245,193 +336,6 @@
       ],
       "title": "Temperature",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P951FEA4DE68E13C5"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "fillOpacity": 80,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineWidth": 1,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 12,
-        "w": 24,
-        "x": 0,
-        "y": 23
-      },
-      "id": 9,
-      "options": {
-        "barRadius": 0,
-        "barWidth": 0.97,
-        "fullHighlight": false,
-        "groupWidth": 0.64,
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "orientation": "auto",
-        "showValue": "auto",
-        "stacking": "none",
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        },
-        "xTickLabelRotation": 0,
-        "xTickLabelSpacing": 0
-      },
-      "pluginVersion": "10.0.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P951FEA4DE68E13C5"
-          },
-          "hide": false,
-          "query": "data = from(bucket: \"esp32\")\n  |> range(start: -24h)\n  |> filter(fn: (r) => r._measurement == \"environment\" and r._field == \"temperature\")\n  |> group(columns: [\"name\"]) \n\nmax_val = data |> max() |> map(fn: (r) => ({ r with stat: \"max\", _time: now() }))\nmin_val = data |> min() |> map(fn: (r) => ({ r with stat: \"min\", _time: now() }))\navg_val = data |> mean() |> map(fn: (r) => ({ r with stat: \"avg\", _time: now() }))\n\nunion(tables: [max_val, min_val, avg_val])\n  |> pivot(rowKey:[\"name\", \"_time\"], columnKey: [\"stat\"], valueColumn: \"_value\")\n  |> group()",
-          "refId": "A"
-        }
-      ],
-      "title": "Temperature",
-      "transformations": [],
-      "type": "barchart"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P951FEA4DE68E13C5"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "celsius"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 12,
-        "w": 24,
-        "x": 0,
-        "y": 35
-      },
-      "id": 8,
-      "options": {
-        "candleStyle": "candles",
-        "colorStrategy": "open-close",
-        "colors": {
-          "down": "red",
-          "up": "green"
-        },
-        "includeAllFields": false,
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "mode": "candles+volume"
-      },
-      "pluginVersion": "10.0.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P951FEA4DE68E13C5"
-          },
-          "hide": false,
-          "query": "low = from(bucket: \"esp32\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r._measurement == \"environment\" and r._field == \"temperature\")\n  |> aggregateWindow(every: 1d, fn: min, createEmpty: false)\n  |> map(fn: (r) => ({ r with _field: \"low\" }))\n\nhigh = from(bucket: \"esp32\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r._measurement == \"environment\" and r._field == \"temperature\")\n  |> aggregateWindow(every: 1d, fn: max, createEmpty: false)\n  |> map(fn: (r) => ({ r with _field: \"high\" }))\n\nopen = from(bucket: \"esp32\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r._measurement == \"environment\" and r._field == \"temperature\")\n  |> aggregateWindow(every: 1d, fn: first, createEmpty: false)\n  |> map(fn: (r) => ({ r with _field: \"open\" }))\n\nclose = from(bucket: \"esp32\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r._measurement == \"environment\" and r._field == \"temperature\")\n  |> aggregateWindow(every: 1d, fn: last, createEmpty: false)\n  |> map(fn: (r) => ({ r with _field: \"close\" }))\n\nunion(tables: [low, high, open, close])\n  |> pivot(rowKey: [\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> filter(fn: (r) => exists r.open and exists r.high and exists r.low and exists r.close)\n  |> keep(columns: [\"_time\", \"open\", \"high\", \"low\", \"close\", \"name\"])",
-          "refId": "A"
-        }
-      ],
-      "title": "Temperature",
-      "type": "candlestick"
     },
     {
       "datasource": {
@@ -495,7 +399,7 @@
         "h": 12,
         "w": 24,
         "x": 0,
-        "y": 47
+        "y": 34
       },
       "id": 5,
       "options": {
@@ -581,8 +485,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -598,7 +501,7 @@
         "h": 12,
         "w": 24,
         "x": 0,
-        "y": 59
+        "y": 46
       },
       "id": 6,
       "options": {
@@ -638,7 +541,7 @@
       "type": "timeseries"
     }
   ],
-  "refresh": false,
+  "refresh": "",
   "schemaVersion": 38,
   "style": "dark",
   "tags": [],
@@ -646,7 +549,7 @@
     "list": []
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {},
