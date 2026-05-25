@@ -21,90 +21,77 @@ OledDisplay oled;
 
 #define LED_PIN 8
 
-TemperatureSensor* sensorSHT40 = createSensor(SensorType::SHT40, Wire);
-TemperatureSensor* sensor680 = createSensor(SensorType::BME680, Wire);
-// TemperatureSensor* sensor = createSensor(SensorType::SHT40);
-
 
 void setup() {
  Serial.begin(115200);
-  delay(1000);
-
-  // Wire.begin(I2C_SDA, I2C_SCL);
-  
-  // bool status = bme.begin(BME280_I2C_ADDR);
-  // if (!status) {
-  //   Serial.println("Nem sikerült inicializálni a BME280 szenzort!");
-  //   while (1);
-  // }
-  // Serial.println("BME280 inicializálva.");
+  delay(3000);
+  Serial.println("setup...");
 
   pinMode(LED_PIN, OUTPUT);
 
-  oled.begin();
-  oled.setFont(u8g2_font_timB18_tn);
-  // oled.setFont(u8g2_font_ncenB08_tr);
-
   delay(50);
-  Serial.println("setup...");
+  Serial.println("setup end");
 }
 
 void loop() {
 
-   if (sensor680 && sensor680->begin()) {
-
-    if(sensor680->isStarted()) {
-      Serial.println("Szenzor sikeres.");
-    } else {
-      Serial.println("Szenzor sikertelen.");
-    }
-
-sensorSHT40->begin();
-
-
-
-    TemperatureData dataSHT40 = sensorSHT40->read();  
-    Serial.println(dataSHT40.toString());
-    
-    
-    TemperatureData data680 = sensor680->read();
-    Serial.println(data680.toString());
-
-    String tempSHT40 = String(dataSHT40.temperature, 2);
-    String humSHT40 = String(dataSHT40.humidity, 2);
-    String temp680 = String(data680.temperature, 2);
-
-    Serial.println("#############  SHT40:" + tempSHT40);
-    Serial.println("############# BME680:" + temp680);
-
-    oled.setText(tempSHT40, 0, 30);
-    oled.show();
-    digitalWrite(LED_PIN, HIGH);
-    delay(5000);
-    oled.setText(humSHT40+"a", 0, 30);
-    oled.show();
-    digitalWrite(LED_PIN, LOW);
-    // oled.setText(humidityStr, 0, 40);
-   } else {
-    Serial.println("Szenzor inicializálása sikertelen!");
-    oled.setText("Sensor error", 0, 30);
-    oled.show();
-   }
+  TemperatureSensor* sensor1 = createSensor(SensorType::BME680, Wire);
+  TemperatureSensor* sensor2 = createSensor(SensorType::SHT40, Wire);
+  TemperatureSensor* sensor3 = createSensor(SensorType::BME280, Wire);
   
+  // SENSOR
+  if (!sensor1 || !sensor1->begin()) {
+    Serial.println("ERROR!!!");
+  } else {
+    Serial.println("SUCCESS 1!!!");
+    TemperatureData data = sensor1->read();
 
-  
+    Serial.println(data.toString());
+  }
 
-  delay(100);
+  if (!sensor2 || !sensor2->begin()) {
+    Serial.println("ERROR 2!!!");
+  } else {
+    Serial.println("SUCCESS 2!!!");
+    TemperatureData data = sensor2->read();
+    Serial.println(data.toString());
+  }
+
+  if (!sensor3 || !sensor3->begin()) {
+    Serial.println("ERROR 3!!!");
+  } else {
+    Serial.println("SUCCESS 3!!!");
+    TemperatureData data = sensor3->read();
+    Serial.println(data.toString());
+  }
+
+  TemperatureData data1;
+  TemperatureData data2;
+  TemperatureData data3;
+  for (int i = 0; i <= 35; i++) {
+    data1 = sensor1->read();
+    data2 = sensor2->read();
+    data3 = sensor3->read();
+    Serial.println(data1.temperature);
+    Serial.println(data2.temperature);
+    Serial.println(data3.temperature);
+    Serial.println("-");
+    Serial.println(data1.humidity);
+    Serial.println(data2.humidity);
+    Serial.println(data3.humidity);
+    Serial.println("-");
+    Serial.println(data1.pressure);
+    Serial.println(data3.pressure);
+    Serial.println("-----");
+    Serial.println(data2.temperature-data3.temperature);
+    Serial.println(data2.humidity-data3.humidity);
+    Serial.println(data1.pressure-data3.pressure);
+
+    Serial.println("-----");
+    delay(3000);
+  }
 
 
-  Serial.println("Looping...");
-  delay(5000);
-
-  digitalWrite(LED_PIN, HIGH);
-  delay(500);
-  digitalWrite(LED_PIN, LOW);
-  delay(500);
-  Serial.println("Looping...");
-
+  delay(15000);
 
 }

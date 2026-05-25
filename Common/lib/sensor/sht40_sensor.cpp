@@ -1,4 +1,5 @@
 #include "sht40_sensor.h"
+#include "logger.h"
 
 SHT40Sensor::SHT40Sensor(TwoWire& wire)
   : wire(wire) {}
@@ -14,7 +15,7 @@ bool SHT40Sensor::beginImpl() {
       if (ok) {
           break;
       }
-
+      logger.println("Sensor init failed... retry");
       attempts++;
       delay(200);  // delay between retries (ms)
 

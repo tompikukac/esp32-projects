@@ -11,13 +11,13 @@ bool BME680Sensor::beginImpl() {
   }
 
   // Basic oversampling configuration
-  // bme.setTemperatureOversampling(BME680_OS_8X);
+  bme.setTemperatureOversampling(BME680_OS_8X);
   bme.setHumidityOversampling(BME680_OS_2X);
   bme.setPressureOversampling(BME680_OS_4X);
   bme.setIIRFilterSize(BME680_FILTER_SIZE_3);
   // bme.setGasHeater(320, 150);  // 320°C for 150 ms
 
-  bme.setTemperatureOversampling(BME680_OS_1X);
+  // bme.setTemperatureOversampling(BME680_OS_1X);
   // bme.setHumidityOversampling(BME680_OS_1X);
   // bme.setPressureOversampling(BME680_OS_1X);
   // bme.setIIRFilterSize(BME680_FILTER_SIZE_0);
@@ -27,13 +27,13 @@ bool BME680Sensor::beginImpl() {
 }
 
 TemperatureData BME680Sensor::readImpl() {
-  Serial.print("BME680Sensor: ");
-  for (int i = 0; i <= 15; i++) {
-    bme.performReading();
-    Serial.print(bme.temperature);
-    Serial.print(" : ");
-    delay(1000);
-  }
+  // Serial.print("BME680Sensor: ");
+  // for (int i = 0; i <= 15; i++) {
+  //   bme.performReading();
+  //   Serial.print(bme.temperature);
+  //   Serial.print(" : ");
+  //   delay(1000);
+  // }
 
   TemperatureData data;  // defaults to NaN
 
@@ -55,12 +55,13 @@ TemperatureData BME680Sensor::readImpl() {
   }
 
   // read GAS data
-  bme.setGasHeater(320, 150);
-  bme.performReading();
+  // bme.setGasHeater(320, 150);
+  // bme.performReading();
+  // bme.setGasHeater(0, 0);
   
-  if (!isnan(bme.gas_resistance)) {
-    data.gas_resistance = bme.gas_resistance / 1000.0;
-  }
+  // if (!isnan(bme.gas_resistance)) {
+  //   data.gas_resistance = bme.gas_resistance / 1000.0;
+  // }
 
   return data;
 }
