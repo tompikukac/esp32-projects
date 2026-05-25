@@ -7,6 +7,10 @@ struct TemperatureData {
   float humidity = NAN;
   float pressure = NAN; // hPA in sea level (100m)
   float gas_resistance = NAN; // kOhm
+
+  TemperatureData(float t = NAN, float h = NAN, float p = NAN, float g = NAN)
+      : temperature(t), humidity(h), pressure(p), gas_resistance(g) {}
+
   bool isValid() const {
     return !isnan(temperature) || !isnan(humidity) || !isnan(pressure) || !isnan(gas_resistance);
   }
@@ -36,6 +40,7 @@ struct TemperatureData {
   }
 };
 
+
 class TemperatureSensor {
 public:
   virtual ~TemperatureSensor() = default;
@@ -48,8 +53,8 @@ public:
 protected:
   virtual bool beginImpl() = 0;
   virtual TemperatureData readImpl() = 0;
+  TemperatureData offsetData;
 
 private:
-  bool started = false;
-  TemperatureData offsetData;
+bool started = false;
 };
