@@ -60,24 +60,9 @@ void setup() {
     delay(2000);
   }
 
-  statusLed.setColor(Colors::Red); 
   logger.begin(115200, 5000);
-  statusLed.setColor(Colors::Blue); 
+  statusLed.setColor(Colors::Green); 
   logger.println("TEMPERATURE");
-
-  // Serial.begin(115200);
-  //         IPAddress local_IP(192,168,1,77); // from parameter
-  //       IPAddress gateway(192,168,1,1);  // set your gateway
-  //       IPAddress subnet(255,255,255,0); // set your subnet mask
-
-  //       WiFi.config(local_IP, gateway, subnet);
-  // WiFi.begin("VaultTec", "polpolpol");
-  // while (WiFi.status() != WL_CONNECTED) {
-  //   delay(500);
-  //   Serial.print(".");
-  // }
-  // Serial.println("Connected");
-
 
   logger.printf("Wakeup cause: %d, forceLoad: %d\n", cause, forceLoad);
   
@@ -90,7 +75,7 @@ void setup() {
   wifi = new WifiController();
   if (!wifi->connect(cfg ? &cfg->ip : nullptr)) {
       influx.sendLog("WiFi connection failed", config.name);
-      goToDeepSleep(&Colors::Red, 10);
+      goToDeepSleep(&Colors::Blue, 10);
   }
   delay(2000);  
   if (cfg == nullptr || forceLoad) {
@@ -107,7 +92,7 @@ void setup() {
   logger.println("Config: " + config.toString());
   delay(50); 
 
-  statusLed.setColor(Colors::Lime);
+
   logger.println("Config loaded");
   if (config.oled)
   {
@@ -119,16 +104,13 @@ void setup() {
   
 // TemperatureSensor* sensor = createSensor(SensorType::SHT40, Wire);
 
-  logger.println("Sensor created");
   // SENSOR
   if (!sensor || !sensor->begin()) {
   // if (!sensor.begin()) {
     influx.sendLog("sensor init failed!", config.name);
-    goToDeepSleep(&Colors::Yellow, 10);
+    goToDeepSleep(&Colors::Red, 10);
   }
   logger.println("Sensor ready");
-
-  statusLed.setColor(Colors::Olive);
  
   // Read sensor
   TemperatureData data = sensor->read();
@@ -138,14 +120,10 @@ void setup() {
   logger.println("TEMP:" + tempStr + " HUM:" + humidityStr);
 
   if (!data.isValid()) {
-    statusLed.setColor(Colors::Blue);
     influx.sendLog("BME280 read failed", config.name);
-    goToDeepSleep(&Colors::Yellow, 10);
+    goToDeepSleep(&Colors::Lime, 10);
   }
   logger.printf("T: %.2f C, H: %.2f %%, P: %.2f hPa\n", data.temperature, data.humidity, data.pressure);
-
-  statusLed.setColor(Colors::Green);
-
 
   if (cfg->oled)
   {
@@ -160,7 +138,9 @@ void setup() {
     goToDeepSleep(&Colors::Red, 10);
   }
 
-  statusLed.setColor(Colors::Blue);
+  statusLed.setColor(Colors::Green);
+  delay(200); 
+  statusLed.setColor(Colors::Black);
   delay(200); 
   statusLed.setColor(Colors::Green);
   delay(200); 
